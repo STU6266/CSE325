@@ -2,7 +2,7 @@
 
 ## 1. Pizza Service – Added Pizza
 
-I created a Pizza API using ASP.NET Core and .NET 10.
+I created a Pizza API using ASP.NET Core and .NET 8.
 
 The original pizzas are:
 - ID 1: Classic Italian
@@ -19,7 +19,7 @@ The GET request returned all three pizzas.
 
 **Request:**
 
-`curl -i http://localhost:5185/pizza`
+`curl -i http://localhost:5055/pizza`
 
 **Response:**
 
@@ -38,7 +38,7 @@ Status: `200 OK`
 **Request:**
 
 ```bash
-curl -i -X POST http://localhost:5185/pizza \
+curl -i -X POST http://localhost:5055/pizza \
   -H "Content-Type: application/json" \
   -d '{"name":"Hawaiian","isGlutenFree":false}'
 ```
@@ -56,9 +56,9 @@ Status: `201 Created`
 **Request:**
 
 ```bash
-curl -i -X PUT http://localhost:5185/pizza/4 \
+curl -i -X PUT http://localhost:5055/pizza/4 \
   -H "Content-Type: application/json" \
-  -d '{"id":4,"name":"Hawaiian Deluxe","isGlutenFree":true}'
+  -d '{"id":4,"name":"Hawaiian Special","isGlutenFree":true}'
 ```
 
 **Response:**
@@ -72,7 +72,7 @@ I checked the updated pizza with GET and received:
 Status: `200 OK`
 
 ```json
-{"id":4,"name":"Hawaiian Deluxe","isGlutenFree":true}
+{"id":4,"name":"Hawaiian Special","isGlutenFree":true}
 ```
 
 ### DELETE – Delete a Pizza
@@ -80,7 +80,7 @@ Status: `200 OK`
 **Request:**
 
 ```bash
-curl -i -X DELETE http://localhost:5185/pizza/4
+curl -i -X DELETE http://localhost:5055/pizza/4
 ```
 
 **Response:**
@@ -97,7 +97,7 @@ This confirmed that the pizza was deleted.
 
 ## 3. Sales Summary Function
 
-I created a function that calculates the sales total and writes a detailed report for all five sales files.
+I created a function that calculates the sales total and generates a detailed report for all five sales files. The program then saves the report to a text file.
 
 **My working function:**
 
@@ -148,4 +148,4 @@ Details:
 
 The report was saved in `salesTotalDir/totals.txt`.
 
-The project built successfully with .NET 10.
+The project built successfully with .NET 8.
