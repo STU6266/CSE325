@@ -1,0 +1,90 @@
+
+@page "/checkout"
+@inject OrderState OrderState
+@inject NavigationManager Navigation
+
+<div class="main">
+    <h1>Checkout</h1>
+
+    @if (!OrderState.Order.Pizzas.Any())
+    {
+        <p>Your cart is empty.</p>
+        <a href="/" class="btn btn-primary">Choose pizzas</a>
+    }
+    else
+    {
+        <h3>Your order</h3>
+
+        @foreach (var pizza in OrderState.Order.Pizzas)
+        {
+            <p>
+                @pizza.Special.Name -
+                @pizza.Size inches -
+                €@pizza.GetFormattedTotalPrice()
+            </p>
+        }
+
+        <h4>Total: €@OrderState.Order.GetFormattedTotalPrice()</h4>
+
+        <h3>Delivery address</h3>
+
+        <EditForm Model="@OrderState.Order.DeliveryAddress"
+                  OnValidSubmit="PlaceOrder">
+
+            <DataAnnotationsValidator />
+            <ValidationSummary />
+
+            <div class="form-group">
+                <label>Name</label>
+                <InputText class="form-control"
+                           @bind-Value="OrderState.Order.DeliveryAddress.Name" />
+            </div>
+
+            <div class="form-group">
+                <label>Street address</label>
+                <InputText class="form-control"
+                           @bind-Value="OrderState.Order.DeliveryAddress.Line1" />
+            </div>
+
+            <div class="form-group">
+                <label>Address line 2 (optional)</label>
+                <InputText class="form-control"
+                           @bind-Value="OrderState.Order.DeliveryAddress.Line2" />
+            </div>
+
+            <div class="form-group">
+                <label>City</label>
+                <InputText class="form-control"
+                           @bind-Value="OrderState.Order.DeliveryAddress.City" />
+            </div>
+
+            <div class="form-group">
+                <label>Region</label>
+                <InputText class="form-control"
+                           @bind-Value="OrderState.Order.DeliveryAddress.Region" />
+            </div>
+
+            <div class="form-group">
+                <label>Postal code</label>
+                <InputText class="form-control"
+                           @bind-Value="OrderState.Order.DeliveryAddress.PostalCode" />
+            </div>
+
+            <button type="submit" class="btn btn-success mt-3">
+                Place order
+            </button>
+        </EditForm>
+    }
+
+    <p class="mt-3">
+        <a href="/">Back to pizzas</a>
+    </p>
+</div>
+
+@code {
+    private void PlaceOrder()
+    {
+        int orderId = OrderState.PlaceOrder();
+        Navigation.NavigateTo($"/myorders/{orderId}");
+    }
+}

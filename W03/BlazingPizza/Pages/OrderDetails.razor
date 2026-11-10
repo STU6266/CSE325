@@ -1,0 +1,57 @@
+
+@page "/myorders/{OrderId:int}"
+@inject OrderState OrderState
+
+<div class="main">
+    @if (order == null)
+    {
+        <h1>Order not found</h1>
+        <p>This order is not available in the current session.</p>
+    }
+    else
+    {
+        <h1>Order #@order.OrderId</h1>
+
+        <p>Your order was placed successfully.</p>
+
+        <h3>Pizzas</h3>
+
+        @foreach (var pizza in order.Pizzas)
+        {
+            <p>
+                @pizza.Special.Name -
+                @pizza.Size inches -
+                €@pizza.GetFormattedTotalPrice()
+            </p>
+        }
+
+        <h4>Total: €@order.GetFormattedTotalPrice()</h4>
+
+        <h3>Delivery address</h3>
+
+        <p>
+            @order.DeliveryAddress.Name<br />
+            @order.DeliveryAddress.Line1<br />
+            @order.DeliveryAddress.City<br />
+            @order.DeliveryAddress.PostalCode
+        </p>
+    }
+
+    <p>
+        <a href="/myorders">My Orders</a> |
+        <a href="/">Order more pizzas</a>
+    </p>
+</div>
+
+@code {
+    [Parameter]
+    public int OrderId { get; set; }
+
+    private Order order;
+
+    protected override void OnParametersSet()
+    {
+        order = OrderState.CompletedOrders
+            .FirstOrDefault(o => o.OrderId == OrderId);
+    }
+}

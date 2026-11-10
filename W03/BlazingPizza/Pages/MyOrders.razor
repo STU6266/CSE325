@@ -1,0 +1,44 @@
+
+@page "/myorders"
+@inject OrderState OrderState
+
+<div class="main">
+    <h1>My Orders</h1>
+
+    @if (!OrderState.CompletedOrders.Any())
+    {
+        <p>You have no orders yet.</p>
+    }
+    else
+    {
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Order</th>
+                    <th>Date</th>
+                    <th>Pizzas</th>
+                    <th>Total</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var order in OrderState.CompletedOrders)
+                {
+                    <tr>
+                        <td>#@order.OrderId</td>
+                        <td>@order.CreatedTime.ToShortDateString()</td>
+                        <td>@order.Pizzas.Count</td>
+                        <td>€@order.GetFormattedTotalPrice()</td>
+                        <td>
+                            <a href="@($"myorders/{order.OrderId}")">
+                                Details
+                            </a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+
+    <a href="/">Back to pizzas</a>
+</div>

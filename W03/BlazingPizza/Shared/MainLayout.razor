@@ -1,0 +1,30 @@
+@inherits LayoutComponentBase
+
+<div id="app" style="height: calc(100vh - 5rem); display: flex; flex-direction: column;">
+
+    <header class="top-bar">
+        <a class="logo" href="/">
+            <img src="img/logo.svg" alt="Blazing Pizza" />
+        </a>
+
+        <NavLink href="/" class="nav-tab" Match="NavLinkMatch.All">
+            <img src="img/pizza-slice.svg" alt="" />
+            <div>Get Pizza</div>
+        </NavLink>
+
+        <NavLink href="/myorders" class="nav-tab">
+            <img src="img/bike.svg" alt="" />
+            <div>My Orders</div>
+        </NavLink>
+    </header>
+
+    <div class="content" style="flex: 1 1 auto; min-height: 0;">
+        @Body
+    </div>
+
+    <footer style="flex: 0 0 auto; padding: 0.75rem; text-align: center; background: #f4f4f4; border-top: 1px solid #ddd;">
+        &copy; @DateTime.Now.Year Blazing Pizza |
+        Steven Kemendics - Austria
+    </footer>
+
+</div>
