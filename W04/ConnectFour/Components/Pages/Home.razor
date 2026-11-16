@@ -1,0 +1,16 @@
+﻿
+@page "/"
+
+<PageTitle>Connect Four</PageTitle>
+
+<h1>Connect Four</h1>
+
+<p>
+    Two players take turns dropping pieces into the board.
+    The first player to connect four pieces wins.
+</p>
+
+<Board @rendermode="InteractiveServer"
+       BoardColor="#1556a3"
+       Player1Color="#e53935"
+       Player2Color="#ffd600" />

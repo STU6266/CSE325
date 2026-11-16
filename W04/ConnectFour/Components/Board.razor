@@ -1,0 +1,127 @@
+
+@inject ConnectFour.GameState State
+
+<div class="cf-game"
+     style="@($"--cf-board:{BoardColor};--cf-red:{Player1Color};--cf-yellow:{Player2Color};")">
+
+    <h3>@StatusText</h3>
+
+    <div class="cf-buttons">
+        @for (int c = 0; c < 7; c++)
+        {
+            int column = c;
+
+            <button class="cf-drop"
+                    disabled="@State.IsColumnDisabled(column)"
+                    @onclick="() => PlayPiece(column)">
+                @(column + 1) ↓
+            </button>
+        }
+    </div>
+
+    @if (!string.IsNullOrEmpty(errorMessage))
+    {
+        <p class="text-danger" role="alert">@errorMessage</p>
+    }
+
+    <div class="cf-board">
+        @for (int row = 0; row < 6; row++)
+        {
+            @for (int col = 0; col < 7; col++)
+            {
+                <div class="@GetCellClass(row, col)"></div>
+            }
+        }
+    </div>
+
+    <button class="btn btn-primary mt-3"
+            @onclick="ResetGame">
+        New Game
+    </button>
+
+    <div class="cf-history">
+        <h3>Move History</h3>
+
+        @if (moveHistory.Count == 0)
+        {
+            <p>No moves yet.</p>
+        }
+        else
+        {
+            <ol>
+                @foreach (var move in moveHistory)
+                {
+                    <li>@move</li>
+                }
+            </ol>
+        }
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public string BoardColor { get; set; } = "#1556a3";
+
+    [Parameter]
+    public string Player1Color { get; set; } = "#e53935";
+
+    [Parameter]
+    public string Player2Color { get; set; } = "#ffd600";
+
+    private List<string> moveHistory = new();
+    private string errorMessage = "";
+
+    private string StatusText => State.CheckForWin() switch
+    {
+        GameState.WinState.Player1_Wins => "Red wins!",
+        GameState.WinState.Player2_Wins => "Yellow wins!",
+        GameState.WinState.Tie => "Draw! The board is full.",
+        _ => State.PlayerTurn == 1
+            ? "Turn: Red"
+            : "Turn: Yellow"
+    };
+
+    protected override void OnInitialized()
+    {
+        State.ResetBoard();
+    }
+
+    private string GetCellClass(int row, int col)
+    {
+        return State.GetCell(row, col) switch
+        {
+            1 => "cf-cell cf-red",
+            2 => "cf-cell cf-yellow",
+            _ => "cf-cell"
+        };
+    }
+
+    private void PlayPiece(int column)
+    {
+        errorMessage = "";
+
+        try
+        {
+            int player = State.PlayerTurn;
+
+            State.PlayPiece(column);
+
+            string color = player == 1 ? "Red" : "Yellow";
+
+            moveHistory.Add(
+                $"Move {moveHistory.Count + 1}: " +
+                $"{color} - Column {column + 1}");
+        }
+        catch (ArgumentException ex)
+        {
+            errorMessage = ex.Message;
+        }
+    }
+
+    private void ResetGame()
+    {
+        State.ResetBoard();
+        moveHistory.Clear();
+        errorMessage = "";
+    }
+}
